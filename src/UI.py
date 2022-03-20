@@ -27,8 +27,10 @@ def login():
         #Lag bruker
         lagBruker()
     else:
-        print()   
-        #registrer
+        print( )
+        epost = input("E-post: ")  
+        passord = input("Passord: ")   
+        
 
 
 def starter():
