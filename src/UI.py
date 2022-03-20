@@ -1,7 +1,9 @@
 import sqlite3
 
 con = sqlite3.connect("KaffeDB.db")
+cursorObj = con.cursor()
 
+aktivBruker = 0
 
 
 def lagBruker():
@@ -11,11 +13,16 @@ def lagBruker():
     brukerEtternavn = input("\nEtternavn: ")
     brukerPassord = input("\nPassord: ")
     #Koble/registrere til databasen
+
+    sql = "INSERT INTO Bruker (BrukerEpost, BrukerPassord, Fornavn, Etternavn) VALUES (?,?,?,?)"
+    val = (brukerEpost,brukerPassord,brukerFornavn,brukerEtternavn)
+    cursorObj.execute(sql,val)
+
+    con.commit()
+    print(cursorObj.rowcount, "record inserted")
     
-    con.execute(''' 
-        INSERT INTO Bruker(BrukerEpost,BrukerPassord,Fornavn,Etternavn)
-        VALUES(%d,%d,%d,%d)
-    ''',brukerEpost,brukerPassord,brukerFornavn,brukerEtternavn)
+
+
 lagBruker()
 
 def login():
@@ -27,7 +34,8 @@ def login():
         #Lag bruker
         lagBruker()
     else:
-        print()   
+        print("Vennligst skriv inn epost og passord") 
+        epost = input()  
         #registrer
 
 
