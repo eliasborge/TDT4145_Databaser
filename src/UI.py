@@ -1,6 +1,11 @@
 
 def lagBruker():
-    print()
+    print("Fyll inn feltene:")
+    brukerEpost = input("/n Epost: ")
+    brukerFornavn = input("/n Fornavn: ")
+    brukerEtternavn = input("/n Etternavn: ")
+    brukerPassord = input("/n Passord: ")
+    #Koble/registrere til databasen
 
 def login():
     print("Logg inn eller registrer deg")
@@ -10,16 +15,16 @@ def login():
     if(brukersvar == "B"):
         #Lag bruker
         lagBruker()
-    else:   
+    else:
+        print()   
         #registrer
 
 
 
-def input():
+def starter():
     print("Velkommen til KaffeDB")
     print("Meny: ")
     print("Trykk på K for å legge til en kaffesmaking")
     print("Trykk på S for å søke")
     print("Trykk på D for å slette en kaffesmaking")
 
-    
