@@ -24,7 +24,7 @@ def createTables():
 
     # Tabell for KaffeSmaking
     con.execute('''CREATE TABLE KaffeSmaking (
-    KaffeSmakingID INTEGER NOT NULL,
+    KaffeSmakingID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     Smaksnotater VARCHAR(200),
     Rangering INTEGER NOT NULL
         CHECK(Rangering >=0 AND Rangering <=10),
