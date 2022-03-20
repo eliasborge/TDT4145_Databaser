@@ -1,9 +1,7 @@
 import sqlite3
 
 con = sqlite3.connect("KaffeDB.db")
-cursorObj = con.cursor()
 
-aktivBruker = 0
 
 
 def lagBruker():
@@ -13,16 +11,11 @@ def lagBruker():
     brukerEtternavn = input("\nEtternavn: ")
     brukerPassord = input("\nPassord: ")
     #Koble/registrere til databasen
-
-    sql = "INSERT INTO Bruker (BrukerEpost, BrukerPassord, Fornavn, Etternavn) VALUES (?,?,?,?)"
-    val = (brukerEpost,brukerPassord,brukerFornavn,brukerEtternavn)
-    cursorObj.execute(sql,val)
-
-    con.commit()
-    print(cursorObj.rowcount, "record inserted")
     
-
-
+    con.execute(''' 
+        INSERT INTO Bruker(BrukerEpost,BrukerPassord,Fornavn,Etternavn)
+        VALUES(%d,%d,%d,%d)
+    ''',brukerEpost,brukerPassord,brukerFornavn,brukerEtternavn)
 lagBruker()
 
 def login():
@@ -34,8 +27,7 @@ def login():
         #Lag bruker
         lagBruker()
     else:
-        print("Vennligst skriv inn epost og passord") 
-        epost = input()  
+        print()   
         #registrer
 
 
@@ -53,14 +45,38 @@ def starter():
 
 def  kaffeSmaking():
     print("Ny kaffesmaking")
-    rangering = input("\nRangering: ")
+    rangering = input("\nRangering (0-10): ")
     smaksdato = input("\nSmaksdato: ")
     smaksnotater = input("\nSmaksnotat: ")
+
+def click():
+    hei = 0
     
 def søk():
-    hei = 0
-    #Navn
-    #
+    hei = 1
+    print("Her kan du filtrere den informasjonen du øsnker, eksempelvis på land, region eller bønnetype.")
+    print("\nNavn")
+    #Land (Ferdigbrent kaffe fra land X)
+    print("\nLand")
+    #Region (Ferdigbrent kaffe fra region X)
+    print("\nRegion")
+    #BonneType (Bonnetype inngaar i X ferdigbrent kaffer)
+    print("\nBønnetype")
+    #Brenneri (mest populeare)
+    print("\nBrenneri")
+    #Smaksnotat (maa kunne soke paa et ord eks. "floral". Brukeren skal få tilbake en liste med 
+    #brennerinavn og kaffenavn.)
+    print("\nSmaksnotat")
+    if click == "Navn":
+        # antall kaffesmakinger hen har
+        hei = 0
+    elif click == "Land":
+        #Ferdigbrent kaffe fra land X
+        hei = 0
+    elif 
+
+
+
 
 
 def slett():
