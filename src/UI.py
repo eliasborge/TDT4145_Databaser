@@ -27,10 +27,8 @@ def login():
         #Lag bruker
         lagBruker()
     else:
-        print( )
-        epost = input("E-post: ")  
-        passord = input("Passord: ")   
-        
+        print()   
+        #registrer
 
 
 def starter():
@@ -51,12 +49,11 @@ def  kaffeSmaking():
     smaksdato = input("\nSmaksdato: ")
     smaksnotater = input("\nSmaksnotat: ")
 
-def click():
-    hei = 0
     
 def søk():
     hei = 1
     print("Her kan du filtrere den informasjonen du øsnker, eksempelvis på land, region eller bønnetype.")
+    print("Filter: ")
     print("\nNavn")
     #Land (Ferdigbrent kaffe fra land X)
     print("\nLand")
@@ -69,13 +66,7 @@ def søk():
     #Smaksnotat (maa kunne soke paa et ord eks. "floral". Brukeren skal få tilbake en liste med 
     #brennerinavn og kaffenavn.)
     print("\nSmaksnotat")
-    if click == "Navn":
-        # antall kaffesmakinger hen har
-        hei = 0
-    elif click == "Land":
-        #Ferdigbrent kaffe fra land X
-        hei = 0
-    elif 
+    filtrering = input("")
 
 
 
