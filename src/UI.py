@@ -1,8 +1,10 @@
 import sqlite3
 
+
 con = sqlite3.connect("KaffeDB.db")
+cur = con.cursor()
 
-
+activeUser = ""
 
 def lagBruker():
     print("Fyll inn feltene:")
@@ -16,20 +18,33 @@ def lagBruker():
         INSERT INTO Bruker(BrukerEpost,BrukerPassord,Fornavn,Etternavn)
         VALUES(%d,%d,%d,%d)
     ''',brukerEpost,brukerPassord,brukerFornavn,brukerEtternavn)
-lagBruker()
+
 
 def login():
     print("Logg inn eller registrer deg")
     
-    brukersvar = input("Trykk på B for å lage en bruker eller trykk på L for å logge inn")
+    brukersvar = input("Trykk på B for å lage en bruker eller trykk på L for å logge inn \n")
 
     if(brukersvar == "B"):
         #Lag bruker
         lagBruker()
     else:
-        print()   
-        #registrer
+        print("Vennligst skriv inn E-post og passord.")
+        epost = input("E-post: ")
+        passord = input("Passord: ")
 
+        cur.execute("SELECT BrukerEpost,BrukerPassord FROM Bruker")
+        resultat = cur.fetchall()
+        for element in resultat:
+            if(element[0] == epost and element[1] == passord):
+                activeUser = epost
+                print("Login success")
+                return
+        print("login failed. Try again")
+        login()
+
+            
+login()
 
 def starter():
     int("Velkommen til KaffeDB")
@@ -48,6 +63,20 @@ def  kaffeSmaking():
     rangering = input("\nRangering (0-10): ")
     smaksdato = input("\nSmaksdato: ")
     smaksnotater = input("\nSmaksnotat: ")
+    kaffenavn = input("Kaffenavn: ")
+    brenneri = input("Brenneri: ")
+
+    cur.execute("SELECT FerdigBrentKaffeID, KaffeNavn, BrenneriNavn FROM FerdigBrentKaffe")
+    results = cur.fetchall()
+    for element in results:
+        if(kaffenavn == element[1] and brenneri == element[2]):
+            kaffe = element
+            con.execute("INSERT INTO KaffeSmaking VALUES (?,?,?,?,?)",
+            (smaksnotater,rangering,smaksdato,activeUser,kaffe[0]))
+            print("\nKaffesmakingen er lagt til i ditt arkiv.")
+            return
+    print("Kaffen du skrev inn finnes ikke i systemene våre. \n Sjekk at du har skrevet inn korrekt informasjon")
+
 
     
 def søk():
