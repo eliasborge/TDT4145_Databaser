@@ -17,7 +17,7 @@ def createTables():
     Fornavn VARCHAR(50) NOT NULL,
     Etternavn VARCHAR(50) NOT NULL,
     CONSTRAINT BrukerPK PRIMARY KEY(BrukerEpost),
-    UNIQUE (BrukerEpost)
+    UNIQUE (BrukerEpost) 
 
     );''')
     print("Table for \"Bruker\" created succesfully")
@@ -144,4 +144,6 @@ def createTables():
 
 
 createTables()
-cursorObj = con.cursor()
+
+#Vet ikke om vi trenger denne? TODO
+#cursorObj = con.cursor()
