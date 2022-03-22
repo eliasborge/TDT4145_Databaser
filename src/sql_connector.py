@@ -42,7 +42,7 @@ def createTables():
     print("Table for \"Kaffesmaking\" created succesfully")
 
     # Tabell for ferdigBrentKaffe
-    con.execute('''CREATE TABLE FerdigBrentKaffe (
+    con.execute('''CREATE TABLE IF NOT EXISTS FerdigBrentKaffe (
     FerdigBrentKaffeID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     Brenningsgrad VARCHAR(15) NOT NULL,
     BrentDato DATE NOT NULL DEFAULT CURRENT_DATE,
@@ -71,7 +71,7 @@ def createTables():
     print("Table for \"KaffeBrenneri\" created succesfully")
 
     # Tabell for KaffeParti
-    con.execute('''CREATE TABLE KaffeParti (
+    con.execute('''CREATE TABLE IF NOT EXISTS  KaffeParti (
     KaffePartiID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     Innhøstingsår INTEGER NOT NULL
                         CHECK ( Innhøstingsår >= 1900 AND Innhøstingsår <= strftime('%Y',CURRENT_DATE)),
@@ -98,7 +98,7 @@ def createTables():
     print("Table for \"Gård\" created succesfully")
 
     # Tabell for KaffeBønne
-    con.execute('''CREATE TABLE KaffeBønne (
+    con.execute('''CREATE TABLE IF NOT EXISTS  KaffeBønne (
     KaffeBønneID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     Art VARCHAR(20),
     Type VARCHAR(50)
@@ -138,70 +138,67 @@ def createTables():
     print("Table for \"iKaffeParti\" created succesfully")
 
 def fillDummyData():
-    i = 0
-    ##TODO HER ER Å FYLLE INN SQL INSERTS SOM SETTER INN DUMMY DATA
-
     con.execute('''
-    INSERT INTO KaffeBrenneri(BrenneriNavn, Sted, Land)
-    VALUES(?, ?, ?)
-    ''', [("Langøra Brenneri", "Trondheim", "Norge"),
-    ("Jacobsen og svart", "Aarhus", "Danmark"),
-    ("Hringariki", "Bogota", "Colombia")]
-    )
+    INSERT INTO KaffeBrenneri(BrenneriNavn, Sted, BrenneriLand)
+    VALUES
+        ("Langøra Brenneri", "Trondheim", "Norge"),
+        ("Jacobsen og svart", "Aarhus", "Danmark"),
+        ("Hringariki", "Bogota", "Colombia");''')
+    
+    
 
     con.execute('''
     INSERT INTO Foredlingsmetode(MetodeNavn, Beskrivelse)
-    VALUES(?, ?)
-    ''', [("Tørket", "Tørker kaffebønnene"),
-    ("Vasket", "Vasker kaffebønnene")])
+    VALUES
+    ("Tørket", "Tørker kaffebønnene"),
+    ("Vasket", "Vasker kaffebønnene");''')
 
     con.execute('''
     INSERT INTO Gård(GårdsNavn, Land, Region)
-    VALUES(?, ?, ?)
-    ''', [("El Cherro", "Spania", "Aragon"),
-    ("Malta", "Colombia", "Andes")
-    ("Cobán", "Guatemala", "Preston")])
+    VALUES
+    ("El Cherro", "Spania", "Aragon"),
+    ("Malta", "Colombia", "Andes"),
+    ("Cobán", "Guatemala", "Preston");''')
 
     con.execute('''
     INSERT INTO KaffeBønne(Art, Type)
-    VALUES(?, ?)
-    ''', [("Eudicots", "Arabica"), # ID = 2
-    ("Excelsa", "Liberica"), # ID = 3
-    ("Asterids", "Liberica")]) # ID = 4
+    VALUES
+    ("Eudicots", "Arabica"), 
+    ("Excelsa", "Liberica"), 
+    ("Asterids", "Liberica");''') #1,2,3
 
     con.execute('''
     INSERT INTO KaffeParti(Innhøstingsår, KiloprisFraGård, GårdsNavn, MetodeNavn)
-    VALUES(?, ?, ?, ?) 
-    ''', [(2019, 80, "El Cherro", "Vasket"), # ID =  5
-    (2020, 90, "Malta", "Vasket"), # ID = 6
-    (2019, 50, "Cobán", "Tørket") # ID = 7
-    ])
+    VALUES 
+    (2019, 80, "El Cherro", "Vasket"),
+    (2020, 90, "Malta", "Vasket"),
+    (2019, 50, "Cobán", "Tørket");''') # ID = 1,2,3
+    
 
     con.execute('''
     INSERT INTO FerdigBrentKaffe(Brenningsgrad, BrentDato, Beskrivelse, Kilopris, KaffeNavn, BrenneriNavn, KaffePartiID)
-    VALUES(?, ?, ?, ?, ?, ?, ?)
-    ''', [("Lys brent", "25.02.2022", "Floral og frisk", "80", "Vinterkaffe 2022", "Langøra Brenneri", "5"), # ID = 8
-    ("Mork brent", "12.02.2022", "Mork med litt sjokoladesmak", "100", "Luksuskaffe", "Jacobsen og svart", "6"), # ID = 9
-    ("Mellombrent", "09.03.2022", "Ser lys ut men har mork smak", "60", "Bygdekaffe", "Hringariki", "7")]) # ID = 10
+    VALUES
+    ("Lys brent", "25.02.2022", "Floral og frisk", "80", "Vinterkaffe 2022", "Langøra Brenneri", "1"), 
+    ("Mork brent", "12.02.2022", "Mork med litt sjokoladesmak", "100", "Luksuskaffe", "Jacobsen og svart", "2"), 
+    ("Mellombrent", "09.03.2022", "Ser lys ut men har mork smak", "60", "Bygdekaffe", "Hringariki", "3");''') # ID = 1,2,3
 
     con.execute(''' 
         INSERT INTO Bruker(BrukerEpost,BrukerPassord,Fornavn,Etternavn)
-        VALUES(?,?,?,?)
-    ''', [("eliasbsv@gmail.com", "helene123", "Elias", "Svinø"),
+        VALUES
+    ("eliasbsv@gmail.com", "helene123", "Elias", "Svinø"),
     ("thomas.frette@gmail.com", "helene123", "Thomas", "Frette"),
     ("helene.bjornsen@gmail.com", "helene123", "Helene", "Bjornsen"),
     ("katrine.bjune@gmail.com", "helene123", "Katrine", "Bjune"),
-    ("marie.holmeide@gmail.com", "helene123", "Marie", "Holmeide")]
-    )
+    ("marie.holmeide@gmail.com", "helene123", "Marie", "Holmeide"); ''')
 
     con.execute('''
     INSERT INTO Kaffesmaking(Smaksnotater, Rangering, BrukerEpost, FerdigBrentKaffeID)
-    VALUES(?, ?, ?, ?)
-    ''', [("Skikkelig digg liksom", "9", "eliasbsv@gmail.com", "8"),
-    ("Veldig grei men litt for grov", "7", "thomas.frette@gmail.com", "9"),
-    ("Likte den ikke litt engang", "2",  "helene.bjornsen@gmail.com", "10")])
+    VALUES
+    ("Skikkelig digg liksom", "9", "eliasbsv@gmail.com", "1"),
+    ("Veldig grei men litt for grov", "7", "thomas.frette@gmail.com", "2"),
+    ("Likte den ikke litt engang", "2",  "helene.bjornsen@gmail.com", "3"); ''')
 
-
+    con.commit()
 
 createTables()
 
