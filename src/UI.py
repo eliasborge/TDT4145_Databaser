@@ -16,16 +16,17 @@ def lagBruker():
     
     con.execute(''' 
         INSERT INTO Bruker(BrukerEpost,BrukerPassord,Fornavn,Etternavn)
-        VALUES(%d,%d,%d,%d)
-    ''',brukerEpost,brukerPassord,brukerFornavn,brukerEtternavn)
+        VALUES(?,?,?,?)
+    ''',(brukerEpost,brukerPassord,brukerFornavn,brukerEtternavn))
 
-
+    login()
+#NICE TO HAVE MEN IKKE MUST FUNGERER NÅ.
 def login():
     print("Logg inn eller registrer deg")
     
     brukersvar = input("Trykk på B for å lage en bruker eller trykk på L for å logge inn \n")
 
-    if(brukersvar == "B"):
+    if(brukersvar.lower() == "b"):
         #Lag bruker
         lagBruker()
     else:
@@ -46,6 +47,7 @@ def login():
             
 login()
 
+#MÅ ENDRE DENNE TODO
 def starter():
     int("Velkommen til KaffeDB")
     print("Meny: ")
@@ -78,7 +80,7 @@ def  kaffeSmaking():
     print("Kaffen du skrev inn finnes ikke i systemene våre. \n Sjekk at du har skrevet inn korrekt informasjon")
 
 
-    
+    #REVUDERE DENNE TODO
 def søk():
     hei = 1
     print("Her kan du filtrere den informasjonen du øsnker, eksempelvis på land, region eller bønnetype.")
@@ -100,7 +102,7 @@ def søk():
 
 
 
-
+#TRENGER IKKE TODO
 def slett():
     slett = 0
 
