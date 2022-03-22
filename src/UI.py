@@ -87,7 +87,7 @@ def penger():
     print("Brennerinavn        | KaffeNavn        | Pris   | Gjennomsnittsscore ")
     for tuple in results:
         print("-"*50)
-        print(tuple[0]+" "*(22-len(tuple[0]))+tuple[1]+" "*(18-len(tuple[1])) + tuple[2]+" "*(8- len(tuple[2])) + tuple[3])
+        print(tuple[0]+" "*(22-len(tuple[0]))+tuple[1]+" "*(18-len(tuple[1])) + str(tuple[2])+" "*(8- len(str(tuple[2]))) + str(tuple[3]))
     
 
 #DONE
@@ -96,14 +96,14 @@ def flestSmak():
     cur.execute(''' 
     SELECT Fornavn, Etternavn, COUNT(DISTINCT KaffeSmakingID) AS antall
     FROM Bruker INNER JOIN KaffeSmaking KS on Bruker.BrukerEpost = KS.BrukerEpost
-    GROUP BY(Fornavn,Etternavn)
-    ORDER BY antall DESC
-
+    GROUP BY(Fornavn)
+    ORDER BY antall DESC;
     ''')
     results = cur.fetchall()
     print("Fornavn        | Etternavn        | Antall ")
     for tuple in results:
-        print(tuple[0]+" "*(17-len(tuple[0]))+tuple[1]+" "*(18-len(tuple[1])) + tuple[2])
+        print("-"*50)
+        print(tuple[0]+" "*(17-len(tuple[0]))+tuple[1]+" "*(18-len(tuple[1])) + str(tuple[2]))
     
 
 #DONE
