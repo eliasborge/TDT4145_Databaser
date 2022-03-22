@@ -3,7 +3,7 @@ import sqlite3
 con = sqlite3.connect("KaffeDB.db")
 cur = con.cursor()
 
-activeUser = ""
+activeUser = "-1"
 
 
 def lagBruker():
@@ -44,7 +44,7 @@ def login():
         resultat = cur.fetchall()
         for element in resultat:
             if(element[0] == epost and element[1] == passord):
-                activeUser = epost
+                activeUser = element[0]
                 print("Login success")
                 return True
         print("login failed. Try again")
@@ -95,6 +95,15 @@ def flestSmak():
 
 def floral():
     print("Her er oversikten over florale kaffetyper: \n")
+    cur.execute(''' 
+    SELECT BrenneriNavn, KaffeNavn
+    FROM FerdigBrentKaffe
+    WHERE Beskrivelse LIKE '''+"%"+'''floral%'
+    ''')
+    results = cur.fetchall()
+    print("Brennerinavn        | KaffeNavn")
+    for tuple in results:
+        print(tuple[0]+" "*(22-len(tuple[0]))+tuple[1])
 
 
 def uvaskede():
@@ -105,7 +114,7 @@ def uvaskede():
 def meny():
     if(login()):
         print("Du er logget inn som: " + activeUser + "\n\n")
-        int("Velkommen til KaffeDB")
+        print("Velkommen til KaffeDB")
         print("Meny: \n")
         print("Trykk på K for å legge til en kaffesmaking\n")
         print("Trykk på P for å se hvilken kaffe som gir deg mest for pengene\n")
@@ -127,3 +136,7 @@ def meny():
 
         elif(svar.lower() == "v"):
             uvaskede()
+
+
+
+meny()
