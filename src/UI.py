@@ -51,7 +51,7 @@ def login():
                 return True
 
         print("login failed. Try again")
-        login()
+        meny()
         return False
 
 
