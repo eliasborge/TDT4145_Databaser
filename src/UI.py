@@ -24,8 +24,6 @@ def lagBruker():
     login()
 
 # NICE TO HAVE MEN IKKE MUST FUNGERER NÅ.
-
-
 def login():
     print("Logg inn eller registrer deg")
 
@@ -75,8 +73,20 @@ def kaffeSmaking():
 
 def penger():
     print("Her er oversikten over kaffetypene som gir deg mest for pengene: \n")
+    cur.execute('''
+    SELECT BrenneriNavn, kaffeNavn, Kilopris, AVG(Rangering) AS gjennomsnitt
+    FROM KaffeSmaking INNER JOIN FerdigBrentKaffe FBK on FBK.FerdigBrentKaffeID = KaffeSmaking.FerdigBrentKaffeID
+    ORDER BY (gjennomsnitt) DESC
+    ''')
 
+    results = cur.fetchall()
+    print("Brennerinavn        | KaffeNavn        | Pris   | Gjennomsnittsscore ")
+    for tuple in results:
+        print("-"*50)
+        print(tuple[0]+" "*(22-len(tuple[0]))+tuple[1]+" "*(18-len(tuple[1])) + tuple[2]+" "*(8- len(tuple[2])) + tuple[3])
+    
 
+#DONE
 def flestSmak():
     print("Her er oversikten over brukerne som har smakt flest kaffetyper: \n")
     cur.execute(''' 
@@ -92,7 +102,7 @@ def flestSmak():
         print(tuple[0]+" "*(17-len(tuple[0]))+tuple[1]+" "*(18-len(tuple[1])) + tuple[2])
     
 
-
+#DONE
 def floral():
     print("Her er oversikten over florale kaffetyper: \n")
     cur.execute(''' 
@@ -108,9 +118,21 @@ def floral():
 
 def uvaskede():
     print("Her er oversikten over uvaskede kaffetyper fra Rwanda og Colombia: \n")
+    cur.execute('''
+    SELECT FerdigBrentKaffe.BrenneriNavn, KaffeNavn
+    FROM FerdigBrentKaffe INNER JOIN KaffeParti ON FerdigBrentKaffe.KaffePartiID = KaffeParti.KaffePartiID
+    INNER JOIN Gård G on KaffeParti.GårdsNavn = G.GårdsNavn
+    WHERE (G.Land LIKE 'Rwanda' OR G.Land LIKE 'Colombia') AND (KaffeParti.MetodeNavn NOT LIKE 'Vasket');
+    ''')
+
+    results = cur.fetchall()
+    print("Brennerinavn       | Kaffenavn")
+    for tuple in results:
+        print("-"*50)
+        print(tuple[0] +" "*(15-len(tuple[0])) + tuple[1])
 
 
-# MÅ ENDRE DENNE TODO
+# DONE FORELØPIG
 def meny():
     if(login()):
         print("Du er logget inn som: " + activeUser + "\n\n")
