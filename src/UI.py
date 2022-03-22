@@ -3,8 +3,8 @@ import sqlite3
 con = sqlite3.connect("KaffeDB.db")
 cur = con.cursor()
 
-isLoggedIn = True
-activeUser = "hei"
+isLoggedIn = False
+
 
 def lagBruker():
     print("Fyll inn feltene:")
