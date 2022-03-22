@@ -32,7 +32,6 @@ def createTables():
 
     BrukerEpost VARCHAR(50) NOT NULL,
     FerdigBrentKaffeID INTEGER NOT NULL,
-    CONSTRAINT KaffeSmakingPK PRIMARY KEY (KaffeSmakingID),
     CONSTRAINT KaffeSmakingFK1 FOREIGN KEY (FerdigBrentKaffeID) REFERENCES FerdigBrentKaffe(FerdigBrentKaffeID)
                             ON UPDATE CASCADE ,
 
@@ -45,7 +44,7 @@ def createTables():
 
     # Tabell for ferdigBrentKaffe
     con.execute('''CREATE TABLE FerdigBrentKaffe (
-    FerdigBrentKaffeID INTEGER NOT NULL,
+    FerdigBrentKaffeID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     Brenningsgrad VARCHAR(15) NOT NULL,
     BrentDato DATE NOT NULL DEFAULT CURRENT_DATE,
     Beskrivelse VARCHAR(100),
@@ -54,7 +53,6 @@ def createTables():
 
     BrenneriNavn VARCHAR(50) NOT NULL,
     KaffePartiID INTEGER NOT NULL,
-    CONSTRAINT FerdigBrentKaffePK PRIMARY KEY(FerdigBrentKaffeID),
     CONSTRAINT FerdigBrentKaffeFK1 FOREIGN KEY (BrenneriNavn) REFERENCES KaffeBrenneri(BrenneriNavn)
                                 ON UPDATE CASCADE,
     CONSTRAINT FerdigBrentKaffeFK1 FOREIGN KEY (KaffePartiID) REFERENCES KaffeParti(KaffePartiID)
@@ -75,14 +73,14 @@ def createTables():
 
     # Tabell for KaffeParti
     con.execute('''CREATE TABLE KaffeParti (
-    KaffePartiID INTEGER NOT NULL,
+    KaffePartiID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     Innhøstingsår INTEGER NOT NULL
                         CHECK ( Innhøstingsår >= 1900 AND Innhøstingsår <= strftime('%Y',CURRENT_DATE)),
     KiloprisFraGård DOUBLE NOT NULL,
 
     GårdsNavn VARCHAR(50) NOT NULL,
     MetodeNavn VARCHAR(50),
-    CONSTRAINT KaffePartiPK PRIMARY KEY (KaffePartiID),
+    
 
     CONSTRAINT KaffePartiFK2 FOREIGN KEY(GårdsNavn) REFERENCES Gård(GårdsNavn)
                         ON UPDATE CASCADE,
@@ -102,10 +100,9 @@ def createTables():
 
     # Tabell for KaffeBønne
     con.execute('''CREATE TABLE KaffeBønne (
-    KaffeBønneID INTEGER NOT NULL,
+    KaffeBønneID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     Art VARCHAR(20),
-    Type VARCHAR(50),
-    CONSTRAINT KaffeBønnePK PRIMARY KEY (KaffeBønneID)
+    Type VARCHAR(50)
     );''')
     print("Table for \"KaffeBønne\" created succesfully")
 
