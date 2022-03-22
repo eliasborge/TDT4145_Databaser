@@ -3,8 +3,8 @@ import sqlite3
 con = sqlite3.connect("KaffeDB.db")
 cur = con.cursor()
 
-activeUser = "-1"
-
+isLoggedIn = True
+activeUser = "hei"
 
 def lagBruker():
     print("Fyll inn feltene:")
@@ -25,6 +25,8 @@ def lagBruker():
 
 # NICE TO HAVE MEN IKKE MUST FUNGERER NÅ.
 def login():
+    global activeUser
+    
     print("Logg inn eller registrer deg")
 
     brukersvar = input(
@@ -43,6 +45,8 @@ def login():
         for element in resultat:
             if(element[0] == epost and element[1] == passord):
                 activeUser = element[0]
+                global isLoggedIn
+                isLoggedIn = True
                 print("Login success")
                 return True
         print("login failed. Try again")
@@ -52,7 +56,7 @@ def login():
 def kaffeSmaking():
     print("Ny kaffesmaking")
     rangering = input("\nRangering (0-10): ")
-    smaksdato = input("\nSmaksdato: ")
+    smaksdato = input("\nSmaksdato (yyyy-mm-dd): ")
     smaksnotater = input("\nSmaksnotat: ")
     kaffenavn = input("Kaffenavn: ")
     brenneri = input("Brenneri: ")
@@ -63,7 +67,7 @@ def kaffeSmaking():
     for element in results:
         if(kaffenavn == element[1] and brenneri == element[2]):
             kaffe = element
-            con.execute("INSERT INTO KaffeSmaking VALUES (?,?,?,?,?)",
+            con.execute("INSERT INTO KaffeSmaking(SmaksNotater, Rangering, SmaksDato,BrukerEpost, FerdigBrentKaffeID) VALUES (?,?,?,?,?)",
                         (smaksnotater, rangering, smaksdato, activeUser, kaffe[0]))
             con.commit()
             print("\nKaffesmakingen er lagt til i ditt arkiv.")
@@ -83,7 +87,7 @@ def penger():
     print("Brennerinavn        | KaffeNavn        | Pris   | Gjennomsnittsscore ")
     for tuple in results:
         print("-"*50)
-        print(tuple[0]+" "*(22-len(tuple[0]))+tuple[1]+" "*(18-len(tuple[1])) + tuple[2]+" "*(8- len(tuple[2])) + tuple[3])
+        print(tuple[0]+" "*(22-len(tuple[0]))+tuple[1]+" "*(18-len(tuple[1])) + str(tuple[2])+" "*(8- len(str(tuple[2]))) + str(tuple[3]))
     
 
 #DONE
@@ -92,14 +96,14 @@ def flestSmak():
     cur.execute(''' 
     SELECT Fornavn, Etternavn, COUNT(DISTINCT KaffeSmakingID) AS antall
     FROM Bruker INNER JOIN KaffeSmaking KS on Bruker.BrukerEpost = KS.BrukerEpost
-    GROUP BY(Fornavn,Etternavn)
-    ORDER BY antall DESC
-
+    GROUP BY(Fornavn)
+    ORDER BY antall DESC;
     ''')
     results = cur.fetchall()
     print("Fornavn        | Etternavn        | Antall ")
     for tuple in results:
-        print(tuple[0]+" "*(17-len(tuple[0]))+tuple[1]+" "*(18-len(tuple[1])) + tuple[2])
+        print("-"*50)
+        print(tuple[0]+" "*(17-len(tuple[0]))+tuple[1]+" "*(18-len(tuple[1])) + str(tuple[2]))
     
 
 #DONE
@@ -108,13 +112,14 @@ def floral():
     cur.execute(''' 
     SELECT BrenneriNavn, KaffeNavn
     FROM FerdigBrentKaffe
-    WHERE Beskrivelse LIKE '''+"%"+'''floral%'
+    WHERE Beskrivelse LIKE +'%floral%';
     ''')
     results = cur.fetchall()
     print("Brennerinavn        | KaffeNavn")
     for tuple in results:
-        print(tuple[0]+" "*(22-len(tuple[0]))+tuple[1])
-
+        print("-"*50)
+        print(tuple[0]+" "*(18-len(tuple[0]))+tuple[1])
+    print("\n")
 
 def uvaskede():
     print("Her er oversikten over uvaskede kaffetyper fra Rwanda og Colombia: \n")
@@ -129,12 +134,13 @@ def uvaskede():
     print("Brennerinavn       | Kaffenavn")
     for tuple in results:
         print("-"*50)
-        print(tuple[0] +" "*(15-len(tuple[0])) + tuple[1])
+        print(tuple[0] +" "*(22-len(tuple[0])) + tuple[1])
 
 
 # DONE FORELØPIG
 def meny():
-    if(login()):
+
+    if(isLoggedIn or login()):
         print("Du er logget inn som: " + activeUser + "\n\n")
         print("Velkommen til KaffeDB")
         print("Meny: \n")
@@ -147,18 +153,37 @@ def meny():
 
         if(svar.lower() == "k"):
             kaffeSmaking()
+            meny()
         elif(svar.lower() == "p"):
             penger()
+            meny()
 
         elif(svar.lower() == "b"):
             flestSmak()
+            meny()
 
         elif(svar.lower() == "f"):
             floral()
+            meny()
 
         elif(svar.lower() == "v"):
             uvaskede()
+            meny()
+        else:
+            return
 
+def insert():
+    con.execute('''
+    INSERT INTO KaffeParti (Innhøstingsår, KiloprisFraGård, GårdsNavn, MetodeNavn)
+    VALUES (2019, 80, "Malta", "Tørket");
+    ''')
 
+    con.execute('''
+        INSERT INTO FerdigBrentKaffe (Brenningsgrad, BrentDato, Beskrivelse, Kilopris, KaffeNavn, BrenneriNavn, KaffePartiID)
+        VALUES
+            ("Mellombrent", "09.03.2022", "Ser lys ut men har mork smak", "60", "Bygdekaffe", "Hringariki", "4");
+    ''')
+
+    con.commit()
 
 meny()
