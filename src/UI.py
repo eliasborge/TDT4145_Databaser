@@ -21,7 +21,7 @@ def lagBruker():
 
     con.commit()
 
-    login()
+    meny()
 
 # NICE TO HAVE MEN IKKE MUST FUNGERER NÅ.
 def login():
@@ -49,7 +49,9 @@ def login():
                 isLoggedIn = True
                 print("Login success")
                 return True
+
         print("login failed. Try again")
+        login()
         return False
 
 
@@ -80,6 +82,7 @@ def penger():
     cur.execute('''
     SELECT BrenneriNavn, kaffeNavn, Kilopris, AVG(Rangering) AS gjennomsnitt
     FROM KaffeSmaking INNER JOIN FerdigBrentKaffe FBK on FBK.FerdigBrentKaffeID = KaffeSmaking.FerdigBrentKaffeID
+    GROUP BY FBK.FerdigBrentKaffeID
     ORDER BY (gjennomsnitt) DESC
     ''')
 
@@ -87,7 +90,7 @@ def penger():
     print("Brennerinavn        | KaffeNavn        | Pris   | Gjennomsnittsscore ")
     for tuple in results:
         print("-"*50)
-        print(tuple[0]+" "*(22-len(tuple[0]))+tuple[1]+" "*(18-len(tuple[1])) + str(tuple[2])+" "*(8- len(str(tuple[2]))) + str(tuple[3]))
+        print(tuple[0]+" "*(22-len(tuple[0]))+tuple[1]+" "*(18-len(tuple[1])) + str(tuple[2])+" "*(10- len(str(tuple[2]))) + str(tuple[3]))
     
 
 #DONE
@@ -96,7 +99,7 @@ def flestSmak():
     cur.execute(''' 
     SELECT Fornavn, Etternavn, COUNT(DISTINCT KaffeSmakingID) AS antall
     FROM Bruker INNER JOIN KaffeSmaking KS on Bruker.BrukerEpost = KS.BrukerEpost
-    GROUP BY(Fornavn)
+    GROUP BY Fornavn, Etternavn
     ORDER BY antall DESC;
     ''')
     results = cur.fetchall()
@@ -141,8 +144,9 @@ def uvaskede():
 def meny():
 
     if(isLoggedIn or login()):
-        print("Du er logget inn som: " + activeUser + "\n\n")
+        print("\n\nDu er logget inn som: " + activeUser + "\n\n")
         print("Velkommen til KaffeDB")
+        print("Trykk enter for å avslutte")
         print("Meny: \n")
         print("Trykk på K for å legge til en kaffesmaking\n")
         print("Trykk på P for å se hvilken kaffe som gir deg mest for pengene\n")

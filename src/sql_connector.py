@@ -32,7 +32,7 @@ def createTables():
     BrukerEpost VARCHAR(50) NOT NULL,
     FerdigBrentKaffeID INTEGER NOT NULL,
     CONSTRAINT KaffeSmakingFK1 FOREIGN KEY (FerdigBrentKaffeID) REFERENCES FerdigBrentKaffe(FerdigBrentKaffeID)
-                            ON UPDATE CASCADE ,
+                            ON UPDATE CASCADE,
 
     CONSTRAINT KaffeSmakingFK2 FOREIGN KEY (BrukerEpost) REFERENCES Bruker(BrukerEpost)
                             ON UPDATE CASCADE
@@ -171,7 +171,7 @@ def fillDummyData():
     INSERT INTO KaffeParti(Innhøstingsår, KiloprisFraGård, GårdsNavn, MetodeNavn)
     VALUES 
     (2019, 80, "El Cherro", "Vasket"),
-    (2020, 90, "Malta", "Vasket"),
+    (2020, 90, "Malta", "Tørket"),
     (2019, 50, "Cobán", "Tørket");''') # ID = 1,2,3
     
 
@@ -194,9 +194,9 @@ def fillDummyData():
     con.execute('''
     INSERT INTO Kaffesmaking(Smaksnotater, Rangering, BrukerEpost, FerdigBrentKaffeID)
     VALUES
-    ("Skikkelig digg liksom", "9", "eliasbsv@gmail.com", "1"),
-    ("Veldig grei men litt for grov", "7", "thomas.frette@gmail.com", "2"),
-    ("Likte den ikke litt engang", "2",  "helene.bjornsen@gmail.com", "3"); ''')
+    ("Skikkelig digg liksom", 9, "eliasbsv@gmail.com", "1"),
+    ("Veldig grei men litt for grov", 7, "thomas.frette@gmail.com", "2"),
+    ("Likte den ikke litt engang", 2,  "helene.bjornsen@gmail.com", "3"); ''')
 
     con.commit()
 
