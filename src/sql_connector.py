@@ -138,9 +138,11 @@ def createTables():
     );''')
     print("Table for \"iKaffeParti\" created succesfully")
 
+def fillDummyData():
+    i = 0
+    ##TODO HER ER Å FYLLE INN SQL INSERTS SOM SETTER INN DUMMY DATA
 
 
 createTables()
 
-#Vet ikke om vi trenger denne? TODO
-#cursorObj = con.cursor()
+
