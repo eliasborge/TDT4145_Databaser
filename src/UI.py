@@ -89,7 +89,7 @@ def penger():
     results = cur.fetchall()
     print("Brennerinavn        | KaffeNavn        | Pris   | Gjennomsnittsscore ")
     for tuple in results:
-        print("-"*50)
+        print("-"*70)
         print(tuple[0]+" "*(22-len(tuple[0]))+tuple[1]+" "*(18-len(tuple[1])) + str(tuple[2])+" "*(10- len(str(tuple[2]))) + str(tuple[3]))
     
 
@@ -121,7 +121,7 @@ def floral():
     print("Brennerinavn        | KaffeNavn")
     for tuple in results:
         print("-"*50)
-        print(tuple[0]+" "*(18-len(tuple[0]))+tuple[1])
+        print(tuple[0]+" "*(22-len(tuple[0]))+tuple[1])
     print("\n")
 
 def uvaskede():
