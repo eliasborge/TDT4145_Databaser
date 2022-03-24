@@ -189,7 +189,8 @@ def fillDummyData():
     ("thomas.frette@gmail.com", "helene123", "Thomas", "Frette"),
     ("helene.bjornsen@gmail.com", "helene123", "Helene", "Bjornsen"),
     ("katrine.bjune@gmail.com", "helene123", "Katrine", "Bjune"),
-    ("marie.holmeide@gmail.com", "helene123", "Marie", "Holmeide"); ''')
+    ("marie.holmeide@gmail.com", "helene123", "Marie", "Holmeide"),
+    ("sensor@gmail.com", "sensor","Sensor", "Sensor"); ''')
 
     con.execute('''
     INSERT INTO Kaffesmaking(Smaksnotater, Rangering, BrukerEpost, FerdigBrentKaffeID)

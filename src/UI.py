@@ -4,7 +4,8 @@ con = sqlite3.connect("KaffeDB.db")
 cur = con.cursor()
 
 isLoggedIn = False
-
+#Innlogging for sensor 
+# Epost: Sensor@gmail.com Passord: sensor
 
 def lagBruker():
     print("Fyll inn feltene:")
