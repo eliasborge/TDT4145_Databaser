@@ -1,9 +1,12 @@
+from contextlib import nullcontext
 import sqlite3
 
 con = sqlite3.connect("KaffeDB.db")
 cur = con.cursor()
 
 isLoggedIn = False
+# Innlogging for sensor
+# Epost: Sensor@gmail.com Passord: sensor
 
 
 def lagBruker():
@@ -24,9 +27,11 @@ def lagBruker():
     meny()
 
 # NICE TO HAVE MEN IKKE MUST FUNGERER NÅ.
+
+
 def login():
     global activeUser
-    
+
     print("Logg inn eller registrer deg")
 
     brukersvar = input(
@@ -58,22 +63,62 @@ def login():
 def kaffeSmaking():
     print("Ny kaffesmaking")
     rangering = input("\nRangering (0-10): ")
-    smaksdato = input("\nSmaksdato (yyyy-mm-dd): ")
+    smaksdato = input("\nSmaksdato (yyyy-mm-dd) - La den stå tom for dagens dato, trykk enter: ")
     smaksnotater = input("\nSmaksnotat: ")
-    kaffenavn = input("Kaffenavn: ")
-    brenneri = input("Brenneri: ")
+    cur.execute(
+        "SELECT KaffeNavn FROM FerdigBrentKaffe")
+
+    results = cur.fetchall()
+    print("KaffeNavn ")
+    print("-"*10)
+    counter = 0
+    for x, tuple in enumerate(results):
+        print(str(x + 1) + " " + tuple[0])
+        counter += 1
+
+    valg = 0
+    while (valg < 1 or valg > counter):
+        valg = int(input("Velg mellom 1 til " + str(counter) + ": "))
+
+    kaffenavn = results[valg-1][0]
+
+    cur.execute(
+        "SELECT BrenneriNavn FROM KaffeBrenneri"
+    )
+
+    results = cur.fetchall()
+    print("Brennerinavn ")
+    print("-"*10)
+    counter = 0
+    for x, tuple in enumerate(results):
+        print(str(x + 1) + " " + tuple[0])
+        counter += 1
+
+    valg = 0
+    while (valg < 1 or valg > counter):
+        valg = int(input("Velg mellom 1 til " + str(counter) + ": "))
+    brenneri = results[valg - 1][0]
 
     cur.execute(
         "SELECT FerdigBrentKaffeID, KaffeNavn, BrenneriNavn FROM FerdigBrentKaffe")
     results = cur.fetchall()
     for element in results:
+        print(element[1])
         if(kaffenavn == element[1] and brenneri == element[2]):
-            kaffe = element
-            con.execute("INSERT INTO KaffeSmaking(SmaksNotater, Rangering, SmaksDato,BrukerEpost, FerdigBrentKaffeID) VALUES (?,?,?,?,?)",
+            if(smaksdato != ""):
+                kaffe = element
+                con.execute("INSERT INTO KaffeSmaking(SmaksNotater, Rangering, SmaksDato,BrukerEpost, FerdigBrentKaffeID) VALUES (?,?,?,?,?)",
                         (smaksnotater, rangering, smaksdato, activeUser, kaffe[0]))
-            con.commit()
-            print("\nKaffesmakingen er lagt til i ditt arkiv.")
-            return
+                con.commit()
+                print("\nKaffesmakingen er lagt til i ditt arkiv.")
+                return
+            else:
+                kaffe = element
+                con.execute("INSERT INTO KaffeSmaking(SmaksNotater, Rangering,BrukerEpost, FerdigBrentKaffeID) VALUES (?,?,?,?)",
+                        (smaksnotater, rangering, activeUser, kaffe[0]))
+                con.commit()
+                print("\nKaffesmakingen er lagt til i ditt arkiv.")
+                return
     print("Kaffen du skrev inn finnes ikke i systemene våre. \n Sjekk at du har skrevet inn korrekt informasjon")
 
 
@@ -89,11 +134,12 @@ def penger():
     results = cur.fetchall()
     print("Brennerinavn        | KaffeNavn        | Pris   | Gjennomsnittsscore ")
     for tuple in results:
-        print("-"*50)
-        print(tuple[0]+" "*(22-len(tuple[0]))+tuple[1]+" "*(18-len(tuple[1])) + str(tuple[2])+" "*(10- len(str(tuple[2]))) + str(tuple[3]))
-    
+        print("-"*70)
+        print(tuple[0]+" "*(22-len(tuple[0]))+tuple[1]+" "*(18-len(tuple[1])
+                                                            ) + str(tuple[2])+" "*(10 - len(str(tuple[2]))) + str(tuple[3]))
 
-#DONE
+
+# DONE
 def flestSmak():
     print("Her er oversikten over brukerne som har smakt flest kaffetyper: \n")
     cur.execute(''' 
@@ -106,10 +152,11 @@ def flestSmak():
     print("Fornavn        | Etternavn        | Antall ")
     for tuple in results:
         print("-"*50)
-        print(tuple[0]+" "*(17-len(tuple[0]))+tuple[1]+" "*(18-len(tuple[1])) + str(tuple[2]))
-    
+        print(tuple[0]+" "*(17-len(tuple[0]))+tuple[1] +
+              " "*(18-len(tuple[1])) + str(tuple[2]))
 
-#DONE
+
+# DONE
 def floral():
     print("Her er oversikten over florale kaffetyper: \n")
     cur.execute(''' 
@@ -121,8 +168,9 @@ def floral():
     print("Brennerinavn        | KaffeNavn")
     for tuple in results:
         print("-"*50)
-        print(tuple[0]+" "*(18-len(tuple[0]))+tuple[1])
+        print(tuple[0]+" "*(22-len(tuple[0]))+tuple[1])
     print("\n")
+
 
 def uvaskede():
     print("Her er oversikten over uvaskede kaffetyper fra Rwanda og Colombia: \n")
@@ -137,7 +185,7 @@ def uvaskede():
     print("Brennerinavn       | Kaffenavn")
     for tuple in results:
         print("-"*50)
-        print(tuple[0] +" "*(22-len(tuple[0])) + tuple[1])
+        print(tuple[0] + " "*(22-len(tuple[0])) + tuple[1])
 
 
 # DONE FORELØPIG
@@ -176,6 +224,7 @@ def meny():
         else:
             return
 
+
 def insert():
     con.execute('''
     INSERT INTO KaffeParti (Innhøstingsår, KiloprisFraGård, GårdsNavn, MetodeNavn)
@@ -189,5 +238,6 @@ def insert():
     ''')
 
     con.commit()
+
 
 meny()
