@@ -61,13 +61,45 @@ def kaffeSmaking():
     rangering = input("\nRangering (0-10): ")
     smaksdato = input("\nSmaksdato (yyyy-mm-dd): ")
     smaksnotater = input("\nSmaksnotat: ")
-    kaffenavn = input("Kaffenavn: ")
-    brenneri = input("Brenneri: ")
+    cur.execute(
+        "SELECT KaffeNavn FROM FerdigBrentKaffe")
+
+    results = cur.fetchall()
+    print("KaffeNavn ")
+    print("-"*10)
+    counter = 0
+    for x, tuple in enumerate(results):
+        print(str(x + 1) +" "+ tuple[0])
+        counter += 1
+    
+    valg = 0
+    while (valg <1 or valg > counter):
+        valg = int(input("Velg mellom 1 til " + str(counter) + ": "))
+
+    kaffenavn = results[valg-1][0]
+
+    cur.execute(
+        "SELECT BrenneriNavn FROM KaffeBrenneri"
+    )
+
+    results = cur.fetchall()
+    print("Brennerinavn ")
+    print("-"*10)
+    counter = 0
+    for x, tuple in enumerate(results):
+        print(str(x + 1) +" "+ tuple[0])
+        counter += 1
+    
+    valg = 0
+    while (valg <1 or valg > counter):
+        valg = int(input("Velg mellom 1 til " + str(counter) + ": "))
+    brenneri = results[valg - 1][0]
 
     cur.execute(
         "SELECT FerdigBrentKaffeID, KaffeNavn, BrenneriNavn FROM FerdigBrentKaffe")
     results = cur.fetchall()
     for element in results:
+        print(element[1])
         if(kaffenavn == element[1] and brenneri == element[2]):
             kaffe = element
             con.execute("INSERT INTO KaffeSmaking(SmaksNotater, Rangering, SmaksDato,BrukerEpost, FerdigBrentKaffeID) VALUES (?,?,?,?,?)",
