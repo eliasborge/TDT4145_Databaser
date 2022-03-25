@@ -1,12 +1,20 @@
 from contextlib import nullcontext
 import sqlite3
 
+###############################################
+#
+# DATABASE PROSJEKT DEL 2
+# VELKOMMEN TIL KaffeDB SITT GRENSESNITT
+# 
+#
+###############################################
+
 con = sqlite3.connect("KaffeDB.db")
 cur = con.cursor()
 
 isLoggedIn = False
 # Innlogging for sensor
-# Epost: Sensor@gmail.com Passord: sensor
+# Epost: sensor@gmail.com Passord: sensor
 
 
 def lagBruker():
@@ -26,9 +34,9 @@ def lagBruker():
 
     meny()
 
-# NICE TO HAVE MEN IKKE MUST FUNGERER NÅ.
 
 
+#Innlogging
 def login():
     global activeUser
 
@@ -59,8 +67,9 @@ def login():
         meny()
         return False
 
-
+#Metode for å smake kaffe
 def kaffeSmaking():
+    #Tar inn data fra bruker
     print("Ny kaffesmaking")
     rangering = input("\nRangering (0-10): ")
     smaksdato = input("\nSmaksdato (yyyy-mm-dd) - La den stå tom for dagens dato, trykk enter: ")
@@ -72,10 +81,11 @@ def kaffeSmaking():
     print("KaffeNavn ")
     print("-"*10)
     counter = 0
+    #Viser mulige kaffevalg
     for x, tuple in enumerate(results):
         print(str(x + 1) + " " + tuple[0])
         counter += 1
-
+    
     valg = 0
     while (valg < 1 or valg > counter):
         valg = int(input("Velg mellom 1 til " + str(counter) + ": "))
@@ -85,7 +95,7 @@ def kaffeSmaking():
     cur.execute(
         "SELECT BrenneriNavn FROM KaffeBrenneri"
     )
-
+    #Viser mulige brennerivalg
     results = cur.fetchall()
     print("Brennerinavn ")
     print("-"*10)
@@ -105,6 +115,7 @@ def kaffeSmaking():
     for element in results:
         print(element[1])
         if(kaffenavn == element[1] and brenneri == element[2]):
+            #Her er det if/else for å skille mellom om brukeren vil bruke dagens dato eller en manuell input.
             if(smaksdato != ""):
                 kaffe = element
                 con.execute("INSERT INTO KaffeSmaking(SmaksNotater, Rangering, SmaksDato,BrukerEpost, FerdigBrentKaffeID) VALUES (?,?,?,?,?)",
@@ -121,7 +132,7 @@ def kaffeSmaking():
                 return
     print("Kaffen du skrev inn finnes ikke i systemene våre. \n Sjekk at du har skrevet inn korrekt informasjon")
 
-
+#Metode for å printe hvilke kaffetyper som gir mest for pengene
 def penger():
     print("Her er oversikten over kaffetypene som gir deg mest for pengene: \n")
     cur.execute('''
@@ -139,7 +150,7 @@ def penger():
                                                             ) + str(tuple[2])+" "*(10 - len(str(tuple[2]))) + str(tuple[3]))
 
 
-# DONE
+# Hvilke brukere som har smakt flest typer kaffe.
 def flestSmak():
     print("Her er oversikten over brukerne som har smakt flest kaffetyper: \n")
     cur.execute(''' 
@@ -156,7 +167,7 @@ def flestSmak():
               " "*(18-len(tuple[1])) + str(tuple[2]))
 
 
-# DONE
+# Kaffer som er beskrevet som florale
 def floral():
     print("Her er oversikten over florale kaffetyper: \n")
     cur.execute(''' 
@@ -171,7 +182,7 @@ def floral():
         print(tuple[0]+" "*(22-len(tuple[0]))+tuple[1])
     print("\n")
 
-
+#Kaffer som er uvaskede og fra Colombia eller Rwanda.
 def uvaskede():
     print("Her er oversikten over uvaskede kaffetyper fra Rwanda og Colombia: \n")
     cur.execute('''
@@ -188,7 +199,7 @@ def uvaskede():
         print(tuple[0] + " "*(22-len(tuple[0])) + tuple[1])
 
 
-# DONE FORELØPIG
+# Main metode. Printer menyen og tar inn inputs fra bruker.
 def meny():
 
     if(isLoggedIn or login()):
@@ -224,20 +235,5 @@ def meny():
         else:
             return
 
-
-def insert():
-    con.execute('''
-    INSERT INTO KaffeParti (Innhøstingsår, KiloprisFraGård, GårdsNavn, MetodeNavn)
-    VALUES (2019, 80, "Malta", "Tørket");
-    ''')
-
-    con.execute('''
-        INSERT INTO FerdigBrentKaffe (Brenningsgrad, BrentDato, Beskrivelse, Kilopris, KaffeNavn, BrenneriNavn, KaffePartiID)
-        VALUES
-            ("Mellombrent", "09.03.2022", "Ser lys ut men har mork smak", "60", "Bygdekaffe", "Hringariki", "4");
-    ''')
-
-    con.commit()
-
-
+#Kjører appen
 meny()
