@@ -93,6 +93,7 @@ def createTables():
     Land VARCHAR(25),
     Region VARCHAR(25),
     GårdsNavn VARCHAR(50),
+    Moh int NOT NULL,
     CONSTRAINT GårdPK PRIMARY KEY (GårdsNavn)
     );''')
     print("Table for \"Gård\" created succesfully")
@@ -151,35 +152,36 @@ def fillDummyData():
     INSERT INTO Foredlingsmetode(MetodeNavn, Beskrivelse)
     VALUES
     ("Tørket", "Tørker kaffebønnene"),
-    ("Vasket", "Vasker kaffebønnene");''')
+    ("Vasket", "Vasker kaffebønnene"),
+    ("Bærtørket", "Tørket på bær");''')
 
     con.execute('''
-    INSERT INTO Gård(GårdsNavn, Land, Region)
+    INSERT INTO Gård(GårdsNavn, Land, Region, Moh)
     VALUES
-    ("El Cherro", "Spania", "Aragon"),
-    ("Malta", "Colombia", "Andes"),
-    ("Cobán", "Guatemala", "Preston");''')
+    ("El Cherro", "Spania", "Aragon", 1200),
+    ("Malta", "Colombia", "Andes", 500),
+    ("Nombre de Dios", "El Salvador", "Santa Ana", 1500);''')
 
     con.execute('''
     INSERT INTO KaffeBønne(Art, Type)
     VALUES
-    ("Eudicots", "Arabica"), 
+    ("Bourbon", "Arabica"), 
     ("Excelsa", "Liberica"), 
     ("Asterids", "Liberica");''') #1,2,3
 
     con.execute('''
     INSERT INTO KaffeParti(Innhøstingsår, KiloprisFraGård, GårdsNavn, MetodeNavn)
     VALUES 
-    (2019, 80, "El Cherro", "Vasket"),
+    (2021, 80, "Nombre de Dios", "Bærtørket"),
     (2020, 90, "Malta", "Tørket"),
-    (2019, 50, "Cobán", "Tørket");''') # ID = 1,2,3
+    (2019, 50, "El Cherro", "Tørket");''') # ID = 1,2,3
     
 
     con.execute('''
     INSERT INTO FerdigBrentKaffe(Brenningsgrad, BrentDato, Beskrivelse, Kilopris, KaffeNavn, BrenneriNavn, KaffePartiID)
     VALUES
-    ("Lys brent", "25.02.2022", "Floral og frisk", "80", "Vinterkaffe 2022", "Langøra Brenneri", "1"), 
-    ("Mork brent", "12.02.2022", "Mork med litt sjokoladesmak", "100", "Luksuskaffe", "Jacobsen og svart", "2"), 
+    ("Lysbrent", "20.01.2022", "En velsmakende og kompleks kaffe for mørketiden", "600", "Vinterkaffe 2022", "Jacobsen og svart", "1"), 
+    ("Morkbrent", "12.02.2022", "Floral med litt sjokoladesmak", "100", "Luksuskaffe", "Langøra Brenneri", "2"), 
     ("Mellombrent", "09.03.2022", "Ser lys ut men har mork smak", "60", "Bygdekaffe", "Hringariki", "3");''') # ID = 1,2,3
 
     con.execute(''' 
@@ -198,6 +200,22 @@ def fillDummyData():
     ("Skikkelig digg liksom", 9, "eliasbsv@gmail.com", "1"),
     ("Veldig grei men litt for grov", 7, "thomas.frette@gmail.com", "2"),
     ("Likte den ikke litt engang", 2,  "helene.bjornsen@gmail.com", "3"); ''')
+
+    con.execute('''
+        INSERT INTO Dyrket (KaffeBønneID,GårdsNavn)
+        VALUES 
+            (1,"Nombre de dias"),
+            (2,"Malta"),
+            (3,"El Cherro");
+    ''')
+
+    con.execute('''
+        INSERT INTO iKaffeParti (KaffePartiID,KaffeBønneID)
+        VALUES 
+            (1,1),
+            (2,2),
+            (3,3);
+    ''')
 
     con.commit()
 
